@@ -92,39 +92,39 @@ def print_stats(chrome):
 
 def init_watching(chrome):
     print('🍪   Cookies: ', end='')
-    clickWhenExist(chrome, cookiePolicyQuery)                           # Accept cookies
+    clickWhenExist(chrome, cookiePolicyQuery)                               # Accept cookies
     print('✔️\n🔞   Mature content: ', end='')
-    clickIfExist(chrome, matureContentQuery)                            # Accept mature content
+    clickIfExist(chrome, matureContentQuery)                                # Accept mature content
     print('✔️\n⚙️   Setting lowest possible resolution: ', end='')
-    clickWhenExist(chrome, streamPauseQuery)                            # - Pause
-    clickWhenExist(chrome, streamSettingsQuery)                         # Open setting menu
-    clickWhenExist(chrome, streamQualitySettingQuery)                   # Open quality setting
-    clickIfExistXP(chrome, streamQualityQuery)                          # Click on 160p
-    clickWhenExist(chrome, streamPauseQuery)                            # - Play
+    clickWhenExist(chrome, streamPauseQuery)                                # - Pause
+    clickWhenExist(chrome, streamSettingsQuery)                             # Open setting menu
+    clickWhenExist(chrome, streamQualitySettingQuery)                       # Open quality setting
+    clickIfExistXP(chrome, streamQualityQuery)                              # Click on 160p
+    clickWhenExist(chrome, streamPauseQuery)                                # - Play
     print('✔️\n🔓   Accepting coins policy: ', end='')
-    clickIfExistXP(chrome, streamCoinsMenuXP)                           # Open coins menu
-    clickIfExistXP(chrome, streamCoinsAcceptFirstUsageXP)               # Accept coins policy
-    clickIfExistXP(chrome, streamCoinsMenuXP)                           # Close coins menu
+    clickIfExistXP(chrome, streamCoinsMenuXP)                               # Open coins menu
+    clickIfExistXP(chrome, streamCoinsAcceptFirstUsageXP)                   # Accept coins policy
+    clickIfExistXP(chrome, streamCoinsMenuXP)                               # Close coins menu
     print('✔️')
 
 
 def fillBet(chrome, bet):
-    clickIfExistXP(chrome, streamCoinsMenuXP)                           # Open coins menu
-    bet.title = getWhenExist(chrome, streamBetTitleInBet)               # Get bet title
-    clickWhenExist(chrome, streamBetTitleInBet)                         # Click on the bet
-    bet.predictionA = getWhenExistXP(chrome, streamBetTitleYesXP)       # Title A
-    bet.predictionB = getWhenExistXP(chrome, streamBetTitleNoXP)        # Title B
-    bet.coteA = getWhenExistXP(chrome, streamBetStatsCoteYesXP)[2:]     # Get cote A
-    bet.coteB = getWhenExistXP(chrome, streamBetStatsCoteNoXP)[2:]      # Get cote B
-    remaining_time = getWhenExist(chrome, streamBetRemainingTime)       # Get time to bet
+    clickIfExistXP(chrome, streamCoinsMenuXP)                               # Open coins menu
+    bet.title = getWhenExist(chrome, streamBetTitleInBet)                   # Get bet title
+    clickWhenExist(chrome, streamBetTitleInBet)                             # Click on the bet
+    bet.predictionA = getWhenExistXP(chrome, streamBetTitleYesXP)           # Title A
+    bet.predictionB = getWhenExistXP(chrome, streamBetTitleNoXP)            # Title B
+    bet.coteA = getWhenExistXP(chrome, streamBetStatsCoteYesXP)[2:]         # Get cote A
+    bet.coteB = getWhenExistXP(chrome, streamBetStatsCoteNoXP)[2:]          # Get cote B
+    remaining_time = getWhenExist(chrome, streamBetRemainingTime)           # Get time to bet
     remaining_time = remaining_time[remaining_time.find(':')-2:remaining_time.find(':')+3]
-    bet.endTime = time.strptime(remaining_time, "%M:%S")                # Set end time
-    bet.amount = getWhenExist(chrome, streamCoins)                      # Set amount to all points
-    clickIfExistXP(chrome, streamCoinsMenuXP)                           # Close coins menu
+    bet.endTime = time.strptime(remaining_time, "%M:%S")                    # Set end time
+    bet.amount = convert_str_to_number(getWhenExist(chrome, streamCoins))   # Set amount to all points
+    clickIfExistXP(chrome, streamCoinsMenuXP)                               # Close coins menu
 
 
-def handleBetInProgress(chrome, bet):                                   # TODO : Need to be tested
-    if not doesExist(chrome, streamBetTitle):                           # If title in chat, then bet is over
+def handleBetInProgress(chrome, bet):
+    if not doesExist(chrome, streamBetTitle):                               # If title in chat, then bet is over
         return
     
     title = getWhenExist(chrome, streamBetTitle)
@@ -199,9 +199,9 @@ def collectAndBet(chrome, stream_url):
     end = False
     balance = 0
     while not end:
-        clickIfExist(chrome, streamCoinsChestQuery)                 # Collect chest
+        clickIfExist(chrome, streamCoinsChestQuery)                                         # Collect chest
 
-        newBalance = getWhenExist(chrome, streamCoins)              # To not spam the output
+        newBalance = convert_str_to_number(getWhenExist(chrome, streamCoins))               # To not spam the output
         if balance != newBalance:
             print_stats(chrome)
             balance = newBalance
@@ -261,13 +261,3 @@ if __name__ == "__main__":
 signal.signal(signal.SIGINT, signal_handler)
 signal.signal(signal.SIGSEGV, signal_handler)
 signal.signal(signal.SIGTERM, signal_handler)
-
-# TODO : KeyboardInterrupt
-# TODO : Ping to know if the stream is on, if not wait 1 hour
-# TODO : Refaire la win/lose stop
-# TODO : Refaire le sleep
-# TODO : Mettre sur Github
-# TODO : Faire en readme avec un GIF 
-# TODO : Msg for chest collect
-# TODO : Debug file always create
-# TODO : Start with stream name in param
