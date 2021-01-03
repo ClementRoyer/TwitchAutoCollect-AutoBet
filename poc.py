@@ -117,8 +117,8 @@ def fillBet(chrome, bet):
     bet.coteA = getWhenExistXP(chrome, streamBetStatsCoteYesXP)[2:]         # Get cote A
     bet.coteB = getWhenExistXP(chrome, streamBetStatsCoteNoXP)[2:]          # Get cote B
     remaining_time = getWhenExist(chrome, streamBetRemainingTime)           # Get time to bet
-    remaining_time = remaining_time[remaining_time.find(':')-2:remaining_time.find(':')+3]
-    bet.endTime = time.strptime(remaining_time, "%M:%S")                    # Set end time
+    remaining_time = remaining_time[remaining_time.find(':')-2:remaining_time.find(':')+3].replace(" ", "")
+    bet.endTime = time.strptime(remaining_time.replace(" ", ""), "%M:%S")   # Set end time
     bet.amount = convert_str_to_number(getWhenExist(chrome, streamCoins))   # Set amount to all points
     clickIfExistXP(chrome, streamCoinsMenuXP)                               # Close coins menu
 
