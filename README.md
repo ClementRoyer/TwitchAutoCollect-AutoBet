@@ -31,7 +31,7 @@
 
 ## Installation & use
 
-1) `git clone git@github.com:ClementRoyer/TwitchAFK.git`
+1) `git clone git@github.com:ClementRoyer/TwitchAutoCollect-AutoBet.git`
 2) `pip3 install -r requirement.txt`
 3) update the *config.txt* with your infos
    - You can find your token on twitch cookies.
