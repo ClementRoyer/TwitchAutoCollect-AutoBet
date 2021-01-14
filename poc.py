@@ -205,7 +205,7 @@ def collectAndBet(chrome, stream_url):
     while not end:
         clickIfExist(chrome, streamCoinsChestQuery)                                         # Collect chest
 
-        newBalance = getStreamCoins(STREAM, TOKEN)                                          # To not spam the output
+        newBalance = getStreamCoins(TOKEN, STREAM)                                          # To not spam the output
         if balance != newBalance:
             print_stats(chrome)
             balance = newBalance
