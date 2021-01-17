@@ -10,8 +10,5 @@ def post_gql_request(token, body):
 
 def getStreamCoins(token, stream):
     body = {"query": "query {user(login: \""+ stream + "\") {channel {self {communityPoints {balance}}}}}"}
-    print(body)
     response = post_gql_request(token, body)
-    print(response)
     return response["data"]["user"]["channel"]["self"]["communityPoints"]["balance"]
-
