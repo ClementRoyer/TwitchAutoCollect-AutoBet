@@ -3,10 +3,13 @@ from selenium import webdriver
 from datetime import datetime
 from utils import *
 from decision import betStrategy
+from gql_request import getStreamCoins
 import os
 import time
 import signal
 import sys
+
+# TODO : Move to subfolder and user folder.file to import
 
 DEBUG       = True
 STREAM      = ''
@@ -65,6 +68,7 @@ def signal_handler(sig, frame):
 
 def exit():
     chrome.close()
+    os.remove("debug.log")
     sys.exit(0)
 
 
@@ -119,7 +123,7 @@ def fillBet(chrome, bet):
     remaining_time = getWhenExist(chrome, streamBetRemainingTime)           # Get time to bet
     remaining_time = remaining_time[remaining_time.find(':')-2:remaining_time.find(':')+3].replace(" ", "")
     bet.endTime = time.strptime(remaining_time.replace(" ", ""), "%M:%S")   # Set end time
-    bet.amount = convert_str_to_number(getWhenExist(chrome, streamCoins))   # Set amount to all points
+    bet.amount = getStreamCoins(TOKEN, STREAM)                              # Set amount to all points
     clickIfExistXP(chrome, streamCoinsMenuXP)                               # Close coins menu
 
 
@@ -201,7 +205,7 @@ def collectAndBet(chrome, stream_url):
     while not end:
         clickIfExist(chrome, streamCoinsChestQuery)                                         # Collect chest
 
-        newBalance = convert_str_to_number(getWhenExist(chrome, streamCoins))               # To not spam the output
+        newBalance = getStreamCoins(TOKEN, STREAM)                                          # To not spam the output
         if balance != newBalance:
             print_stats(chrome)
             balance = newBalance
